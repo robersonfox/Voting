@@ -2,7 +2,9 @@
   "dependencies": {
     "aws-sdk": "^2.1511.0",
     "body-parser": "^1.20.2",
+    "chai": "^4.3.10",
     "express": "^4.18.2",
+    "mocha": "^10.2.0",
     "nodemon": "^3.0.2",
     "uuid": "^9.0.1"
   },
@@ -10,7 +12,7 @@
   "version": "1.0.0",
   "main": "app/src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --reporter spec",
     "start": "node app/src/index.js",
     "dev": "nodemon app/src/index.js",
     "debug": "nodemon --inspect app/src/index.js"
