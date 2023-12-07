@@ -83,6 +83,18 @@ app.post('/voting-sessions/:id/vote', async (req, res) => {
       return res.status(404).send('Sessão de votação não encontrada');
     }
 
+    // Impedir votação após 2 horas
+    const creationDate = parseFloat(votingSession.data.default);
+
+    const expiryHour = new Date(creationDate)
+      .getHours();
+    const expiryDate = new Date(creationDate)
+      .setHours(expiryHour + 2);
+
+    if (expiryDate < Date.now()) {
+      return res.status(400).send('Sessão de votação encerrada');
+    }
+
     const memberParams = {
       TableName: membersTable,
       Key: { cpf },
