@@ -46,8 +46,19 @@ app.post('/members', async (req, res) => {
 app.post('/voting-sessions', async (req, res) => {
 
   try {
-    const { nome, descricao } = req.body;
-    const votingSession = createVotingSession(nome, descricao);
+    const { nome, descricao, expira } = req.body;
+
+    if (!nome || !descricao) {
+      return res.status(400).send('Nome e descrição são obrigatórios');
+    }
+
+    if (expira && isNaN(expira) || expira < 1 || !expira) {
+      expireTime = 2;
+    } else {
+      expireTime = expira;
+    }
+
+    const votingSession = createVotingSession(nome, descricao, expireTime);
 
     const params = {
       TableName: pautaTable,
@@ -84,14 +95,19 @@ app.post('/voting-sessions/:id/vote', async (req, res) => {
     }
 
     // Impedir votação após 2 horas
+    let expireTime = votingSession.expireTime;
+    if (expireTime && isNaN(expireTime) || expireTime < 1 || !expireTime) {
+      expireTime = 2;
+    }
+
     const creationDate = parseFloat(votingSession.data.default);
 
     const expiryHour = new Date(creationDate)
       .getHours();
     const expiryDate = new Date(creationDate)
-      .setHours(expiryHour + 2);
+      .setHours(expiryHour + expireTime);
 
-    if (expiryDate < Date.now()) {
+    if (new Date(expiryDate) < new Date()) {
       return res.status(400).send('Sessão de votação encerrada');
     }
 

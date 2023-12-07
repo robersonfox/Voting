@@ -11,10 +11,16 @@ let member;
 describe('API de Votação', function () {
     it('Deve criar uma sessão de votação', async function () {
         // Crie uma nova sessão de votação
-        session = await request.post(`/voting-sessions`, {
-            nome: "Comprar ar condicionado",
-            descricao: "Pauta para decidir se compramos ou não ar-condicionado para a administração"
-        });
+
+        const data = {
+            nome: "Comprar mantimentos",
+            descricao: "Pauta descricao"
+        };
+
+        session = await request
+            .post('/voting-sessions')
+            .send(data)
+            .set('Content-Type', 'application/json');
 
         expect(session.status).to.equal(201);
     });
