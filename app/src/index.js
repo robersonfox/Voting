@@ -20,7 +20,6 @@ app.post('/members', async (req, res) => {
   try {
     const { cpf } = req.body;
 
-
     if (validarCPF(cpf)) {
       const member = createMember(cpf);
 
@@ -129,12 +128,12 @@ app.get('/voting-results', async (req, res) => {
     const votingResults = [];
 
     for (const item of scanResult.Items) {
-      const { nome:pauta, descricao, voto:votos } = item;
+      const { nome: pauta, descricao, voto: votos } = item;
 
       const result = {
         pauta,
         descricao,
-        votos: {"contra" : 0, "favor" : 0},
+        votos: { "contra": 0, "favor": 0 },
       };
 
       votos.forEach((voto) => {
@@ -158,3 +157,5 @@ app.get('/voting-results', async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+module.exports = app;
